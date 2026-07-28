@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Careers — Mark &amp; Mind</title>
+<link rel="stylesheet" href="assets/styles.css" />
+<style>
+  dialog { border: none; border-radius: 8px; padding: 32px; max-width: 480px; width: 90%; }
+  dialog h3 { font-family: var(--serif); color: var(--navy); margin-top: 0; }
+  dialog label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 4px; }
+  dialog input, dialog textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; }
+  dialog textarea { resize: vertical; min-height: 80px; }
+  dialog .actions { margin-top: 20px; display: flex; gap: 10px; }
+  #status-msg { margin-top: 12px; font-size: 14px; }
+  .job-meta { font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="Mark &amp; Mind" style="height:34px; width:auto;" />
+      Mark<span class="amp">&amp;</span>Mind
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="practice-areas.html">Practice Areas</a>
+      <a href="insights.html">Insights</a>
+      <a href="about.html">About</a>
+      <a href="careers.html" class="current">Careers</a>
+      <a href="contact.html" class="btn btn-gold">Book a Consultation</a>
+    </nav>
+  </div>
+</header>
+
+<section class="tight">
+  <div class="wrap">
+    <div class="eyebrow">Careers</div>
+    <h1>Build the practice with us.</h1>
+    <p class="lede">We're looking for people who care about clarity as much as correctness — whether that's in a courtroom, a contract, or a line of code.</p>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<section>
+  <div class="wrap" style="max-width:760px;">
+    <div id="job-list">
+      <p style="color:var(--grey); font-style:italic;">Loading open roles…</p>
+    </div>
+  </div>
+</section>
+
+<dialog id="apply-dialog">
+  <h3 id="apply-job-title">Apply</h3>
+  <form id="apply-form">
+    <label>Full name</label>
+    <input type="text" name="full_name" required maxlength="120" />
+    <label>Email</label>
+    <input type="email" name="email" required />
+    <label>Phone</label>
+    <input type="tel" name="phone" required maxlength="20" />
+    <label>Cover note (optional)</label>
+    <textarea name="cover_note"></textarea>
+    <label>Resume (PDF or Word, max 5MB)</label>
+    <input type="file" name="resume" accept=".pdf,.doc,.docx" required />
+    <div id="status-msg"></div>
+    <div class="actions">
+      <button type="submit" class="btn btn-gold">Submit Application</button>
+      <button type="button" class="btn btn-ghost" id="cancel-btn">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand"><img src="assets/logo.png" alt="Mark &amp; Mind" style="height:34px; width:auto; background:#fff; border-radius:4px; padding:3px 6px;" />Mark<span class="amp">&amp;</span>Mind</div>
+        <p style="font-size:13.5px; margin-top:12px; max-width:280px;">Considered counsel, plainly explained. Saurabh Kumar, Advocate.</p>
+      </div>
+      <div>
+        <h4>Practice Areas</h4>
+        <a href="practice-areas.html#civil">Civil Litigation</a>
+        <a href="practice-areas.html#corporate">Corporate &amp; Commercial</a>
+        <a href="practice-areas.html#property">Property &amp; Real Estate</a>
+        <a href="practice-areas.html#family">Family Law</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="tel:+919117195176">+91 91171 95176</a>
+        <a href="mailto:ipmarkandmind@gmail.com">ipmarkandmind@gmail.com</a>
+        <a href="contact.html">New Delhi, India · Mon–Sat, 10am–7pm</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Mark &amp; Mind. Saurabh Kumar, Advocate.</span>
+      <span><a href="legal.html" style="display:inline;">Disclaimer &amp; Privacy Policy</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // If this page is served BY the Careers API itself (at /careers), leave this empty (same-origin).
+  // If hosted separately on the main site, point it at your API's full URL instead.
+  const API_BASE = "";
+
+  const jobListEl = document.getElementById("job-list");
+  const dialog = document.getElementById("apply-dialog");
+  const applyForm = document.getElementById("apply-form");
+  const statusMsg = document.getElementById("status-msg");
+  let currentSlug = null;
+
+  const employmentLabels = { full_time: "Full-time", part_time: "Part-time", internship: "Internship", contract: "Contract" };
+
+  async function loadJobs() {
+    try {
+      const res = await fetch(`${API_BASE}/api/jobs`);
+      const jobs = await res.json();
+      if (!jobs.length) {
+        jobListEl.innerHTML = `<p style="color:var(--grey); font-style:italic;">No open roles right now — check back soon, or write to us anyway.</p>`;
+        return;
+      }
+      jobListEl.innerHTML = jobs.map(job => `
+        <div class="practice-card" style="margin-bottom:20px;">
+          <div class="job-meta">${job.department} · ${job.location} · ${employmentLabels[job.employment_type] || job.employment_type}</div>
+          <h3>${job.title}</h3>
+          <p style="color:var(--grey); font-size:14.5px; margin:8px 0 16px;">${job.summary}</p>
+          <button class="btn" onclick="openApply('${job.slug}', '${job.title.replace(/'/g, "\\'")}')">Apply Now</button>
+        </div>
+      `).join("");
+    } catch (err) {
+      jobListEl.innerHTML = `<p style="color:var(--grey); font-style:italic;">Couldn't load open roles right now. Please try again later.</p>`;
+    }
+  }
+
+  function openApply(slug, title) {
+    currentSlug = slug;
+    document.getElementById("apply-job-title").textContent = `Apply — ${title}`;
+    statusMsg.textContent = "";
+    applyForm.reset();
+    dialog.showModal();
+  }
+
+  document.getElementById("cancel-btn").addEventListener("click", () => dialog.close());
+
+  applyForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusMsg.textContent = "Submitting…";
+    statusMsg.style.color = "#666";
+    const formData = new FormData(applyForm);
+    try {
+      const res = await fetch(`${API_BASE}/api/jobs/${currentSlug}/apply`, { method: "POST", body: formData });
+      if (res.status === 201) {
+        statusMsg.textContent = "Application received — we'll be in touch.";
+        statusMsg.style.color = "green";
+        setTimeout(() => dialog.close(), 1800);
+      } else {
+        const err = await res.json();
+        statusMsg.textContent = err.detail || "Something went wrong. Please try again.";
+        statusMsg.style.color = "#b3261e";
+      }
+    } catch (err) {
+      statusMsg.textContent = "Network error — please try again.";
+      statusMsg.style.color = "#b3261e";
+    }
+  });
+
+  loadJobs();
+</script>
+
+</body>
+</html>

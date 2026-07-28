@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" id="laurel-icon">
+  <path d="M30 20 C15 35, 15 65, 30 85" stroke="#C9962C" stroke-width="2.5"/>
+  <path d="M25 30 L35 33 M22 42 L33 43 M22 55 L33 54 M25 67 L34 63 M29 78 L37 72" stroke="#C9962C" stroke-width="2.5"/>
+  <path d="M70 20 C85 35, 85 65, 70 85" stroke="#C9962C" stroke-width="2.5"/>
+  <path d="M75 30 L65 33 M78 42 L67 43 M78 55 L67 54 M75 67 L66 63 M71 78 L63 72" stroke="#C9962C" stroke-width="2.5"/>
+  <circle cx="50" cy="45" r="18" stroke="#C9962C" stroke-width="2.5"/>
+  <path d="M42 45 L48 51 L59 38" stroke="#C9962C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
