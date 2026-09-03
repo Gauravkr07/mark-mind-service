@@ -1,23 +1,23 @@
 from functools import lru_cache
 from pydantic_settings import BaseSettings
-from pydantic import field_validator
+# from pydantic import field_validator  # only needed by the commented-out database_url validator
 
 
 class Settings(BaseSettings):
-    # Postgres
-    database_url: str = "postgresql+asyncpg://mm_user:mm_password@postgres:5432/mm_careers"
-
-    @field_validator("database_url")
-    @classmethod
-    def _use_asyncpg_driver(cls, v: str) -> str:
-        # Managed Postgres providers (e.g. Render) hand out plain
-        # postgres:// / postgresql:// URLs; SQLAlchemy's async engine needs
-        # the asyncpg driver explicitly in the scheme.
-        if v.startswith("postgres://"):
-            return v.replace("postgres://", "postgresql+asyncpg://", 1)
-        if v.startswith("postgresql://"):
-            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
-        return v
+    # Postgres — disabled for now, using YAML file storage (see app/storage.py)
+    # database_url: str = "postgresql+asyncpg://mm_user:mm_password@postgres:5432/mm_careers"
+    #
+    # @field_validator("database_url")
+    # @classmethod
+    # def _use_asyncpg_driver(cls, v: str) -> str:
+    #     # Managed Postgres providers (e.g. Render) hand out plain
+    #     # postgres:// / postgresql:// URLs; SQLAlchemy's async engine needs
+    #     # the asyncpg driver explicitly in the scheme.
+    #     if v.startswith("postgres://"):
+    #         return v.replace("postgres://", "postgresql+asyncpg://", 1)
+    #     if v.startswith("postgresql://"):
+    #         return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+    #     return v
 
     # Admin auth (simple header-based key; swap for JWT/RBAC later if needed)
     admin_api_key: str = "change-me-in-.env"

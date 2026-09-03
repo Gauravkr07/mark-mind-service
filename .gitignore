@@ -5,6 +5,10 @@ __pycache__/
 
 # Environment files
 .env
+.venv
+
+# YAML file storage (temporary DB replacement)
+data/
 
 # Virtual environments
 venv/

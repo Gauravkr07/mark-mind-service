@@ -4,10 +4,11 @@ services:
     runtime: docker
     plan: free
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: mark-mind-db
-          property: connectionString
+      # DATABASE_URL disabled for now — using YAML file storage, no DB provisioned
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: mark-mind-db
+      #     property: connectionString
       - key: ADMIN_API_KEY
         generateValue: true
       - key: UPLOAD_DIR
@@ -19,6 +20,6 @@ services:
       - key: APPLY_RATE_LIMIT_WINDOW_SECONDS
         value: "3600"
 
-databases:
-  - name: mark-mind-db
-    plan: free
+# databases:
+#   - name: mark-mind-db
+#     plan: free

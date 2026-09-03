@@ -9,28 +9,31 @@ services:
       - .env
     volumes:
       - resumes:/app/uploads
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - data:/app/data
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
 
-  postgres:
-    image: postgres:16-alpine
-    container_name: mm_careers_postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: mm_user
-      POSTGRES_PASSWORD: mm_password
-      POSTGRES_DB: mm_careers
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mm_user -d mm_careers"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # postgres disabled for now — using YAML file storage (see app/storage.py)
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: mm_careers_postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: mm_user
+  #     POSTGRES_PASSWORD: mm_password
+  #     POSTGRES_DB: mm_careers
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U mm_user -d mm_careers"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
 volumes:
-  pgdata:
+  # pgdata:
   resumes:
+  data:
